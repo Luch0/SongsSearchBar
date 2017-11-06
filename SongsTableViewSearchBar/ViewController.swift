@@ -23,10 +23,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var filteredSongArr: [Song] {
         guard let searchTerm = searchTerm, searchTerm != "" else {
-            return self.allLoveSongs
+            return allLoveSongs
         }
-        return allLoveSongs.filter{ (song) in
-            song.name.lowercased().contains(searchTerm.lowercased())
+        guard let scopeTitles = self.songSearchBar.scopeButtonTitles else {
+            return allLoveSongs
+        }
+        let selectedIndex = self.songSearchBar.selectedScopeButtonIndex
+        let filteringCriteria = scopeTitles[selectedIndex]
+        switch filteringCriteria {
+        case "Title":
+            return allLoveSongs.filter{(song) in
+                song.name.lowercased().contains(searchTerm.lowercased())
+            }
+        case "Artist":
+            return allLoveSongs.filter{(song) in
+                song.artist.lowercased().contains(searchTerm.lowercased())
+            }
+        default:
+            return allLoveSongs
         }
     }
     
@@ -65,6 +79,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         self.searchTerm = searchBar.text
         searchBar.resignFirstResponder()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        self.searchTerm = searchText
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+        songsTableView.reloadData()
     }
 
 }
