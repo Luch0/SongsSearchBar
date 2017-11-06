@@ -38,6 +38,7 @@ class Song {
         Song(name: "That's How Much I Love You", artist: "Pat Boone"),
         Song(name: "For Your Love", artist: "Ed Townsend"),
         Song(name: "Win Your Love For Me", artist: "Sam Cooke"),
+        /*
         Song(name: "To Be Loved", artist: "Jackie Wilson"),
         Song(name: "Down The Aisle Of Love", artist: "The Quin-Tones"),
         Song(name: "Fire Of Love", artist: "Jody Reynolds"),
@@ -2485,6 +2486,7 @@ class Song {
         Song(name: "Love On The Brain", artist: "Rihanna"),
         Song(name: "I Hate U I Love U", artist: "gnash Featuring Olivia O'Brien"),
         Song(name: "Love Make The World Go Round", artist: "Jennifer Lopez & Lin-Manuel Miranda"),
+ */
         Song(name: "Let Me Love You", artist: "DJ Snake Featuring Justin Bieber"),
         Song(name: "In The Name Of Love", artist: "Martin Garrix & Bebe Rexha"),
     ]

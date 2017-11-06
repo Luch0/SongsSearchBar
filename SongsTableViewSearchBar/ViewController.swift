@@ -8,27 +8,44 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
     @IBOutlet weak var songsTableView: UITableView!
+    @IBOutlet weak var songSearchBar: UISearchBar!
     
     var allLoveSongs = [Song]()
+    
+    var searchTerm: String? {
+        didSet {
+            self.songsTableView.reloadData()
+        }
+    }
+    
+    var filteredSongArr: [Song] {
+        guard let searchTerm = searchTerm, searchTerm != "" else {
+            return self.allLoveSongs
+        }
+        return allLoveSongs.filter{ (song) in
+            song.name.lowercased().contains(searchTerm.lowercased())
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.songsTableView.delegate = self
         self.songsTableView.dataSource = self
+        self.songSearchBar.delegate = self
         allLoveSongs = Song.loveSongs
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return allLoveSongs.count
+        return filteredSongArr.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let songCell = tableView.dequeueReusableCell(withIdentifier: "Song Cell", for: indexPath)
-        songCell.textLabel?.text = allLoveSongs[indexPath.row].name
-        songCell.detailTextLabel?.text = allLoveSongs[indexPath.row].artist
+        songCell.textLabel?.text = filteredSongArr[indexPath.row].name
+        songCell.detailTextLabel?.text = filteredSongArr[indexPath.row].artist
         return songCell
     }
     
@@ -38,11 +55,17 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
      override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let destination = segue.destination as? LoveSongDetailedViewController {
             let selectedRow = songsTableView.indexPathForSelectedRow!.row
-            let selectedSong = self.allLoveSongs[selectedRow]
+            let selectedSong = self.filteredSongArr[selectedRow]
             destination.loveSong = selectedSong
         }
      }
- 
+    
+    // MARK: - Search Bar Delegate
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchTerm = searchBar.text
+        searchBar.resignFirstResponder()
+    }
 
 }
 
