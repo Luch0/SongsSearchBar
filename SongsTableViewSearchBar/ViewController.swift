@@ -8,20 +8,41 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    @IBOutlet weak var songsTableView: UITableView!
+    
+    var allLoveSongs = [Song]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
+        self.songsTableView.delegate = self
+        self.songsTableView.dataSource = self
+        allLoveSongs = Song.loveSongs
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return allLoveSongs.count
     }
-
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let songCell = tableView.dequeueReusableCell(withIdentifier: "Song Cell", for: indexPath)
+        songCell.textLabel?.text = allLoveSongs[indexPath.row].name
+        songCell.detailTextLabel?.text = allLoveSongs[indexPath.row].artist
+        return songCell
+    }
+    
+    
+     // MARK: - Navigation
+    
+     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let destination = segue.destination as? LoveSongDetailedViewController {
+            let selectedRow = songsTableView.indexPathForSelectedRow!.row
+            let selectedSong = self.allLoveSongs[selectedRow]
+            destination.loveSong = selectedSong
+        }
+     }
+ 
 
 }
 
